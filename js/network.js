@@ -1,5 +1,10 @@
-var svg = d3.select("#network"),
-    width = +svg.attr("width"),
+var rect = $("#main")[0].getBoundingClientRect();
+
+
+var svg = d3.select("#network");
+svg.attr("width",rect.width)
+svg.attr("height",rect.height)
+var    width = +svg.attr("width"),
     height = +svg.attr("height");
 
 var color = d3.scaleOrdinal(d3.schemeCategory20);
