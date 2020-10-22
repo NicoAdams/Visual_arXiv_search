@@ -6,101 +6,120 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation
 
-d3.json("Example_Data/miserables.json", function(error, graph) {
-  if (error) throw error;
 
-   simulation = d3.forceSimulation()
-      .force("link", d3.forceLink().id(function(d) { return d.id; }))
-      .force("collision",d3.forceCollide([25]))
-      .force("charge", d3.forceManyBody().strength(-50).distanceMax([10]) )
-      .force("center", d3.forceCenter(width / 2, height / 2));
+function generateNetwork(jsonFilepath) {
 
-  function get_radius(d) {
-    var connections = link.filter(function(l) {
-    return l.source  == d.id || l.target  == d.id
-    });
-    return(connections.size()*1+5)
-  }
+  d3.json(jsonFilepath, function(error, graph) {
+    if (error) throw error;
 
-  var link = svg.append("g")
-      .attr("class", "links")
-    .selectAll("line")
-    .data(graph.links)
-    .enter().append("line")
-      .attr("stroke-width", function(d) { return 1; });
+     simulation = d3.forceSimulation()
+        .force("link", d3.forceLink().id(function(d) { return d.id; }))
+        .force("collision",d3.forceCollide([25]))
+        .force("charge", d3.forceManyBody().strength(-50).distanceMax([10]) )
+        .force("center", d3.forceCenter(width / 2, height / 2));
 
-  var node = svg.append("g")
-      .attr("class", "nodes")
-    .selectAll("g")
-    .data(graph.nodes)
-    .enter().append("g")
+    function get_radius(d) {
+      var connections = link.filter(function(l) {
+      return l.source  == d.id || l.target  == d.id
+      });
+      return(connections.size()*1+5)
+    }
 
-  var circles = node.append("circle")
-      .attr("r",  function(d){return(get_radius(d))})
-      .attr("fill", function(d) { return color(d.group); })
-      .call(d3.drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended));
+    var link = svg.append("g")
+        .attr("class", "links")
+      .selectAll("line")
+      .data(graph.links)
+      .enter().append("line")
+        .attr("stroke-width", function(d) { return 1; });
 
-  var lables = node.append("text")
+    var node = svg.append("g")
+        .attr("class", "nodes")
+      .selectAll("g")
+      .data(graph.nodes)
+      .enter().append("g")
 
+    var circles = node.append("circle")
+        .attr("r",  function(d){return(get_radius(d))})
+        .attr("fill", function(d) { return color(d.group); })
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+
+    var lables = node.append("text")
+
+        .text(function(d) {
+          if (get_radius(d)>10) {
+            return d.id;
+          }
+
+        })
+        .attr("class",'txt')
+        .attr('x',function(d){return(-get_radius(d))})
+        .attr('y', 3);
+    var hover  = node.append("text")
       .text(function(d) {
-        if (get_radius(d)>10) {
-          return d.id;
-        }
-
-      })
-      .attr("class",'txt')
+        if (get_radius(d)<=10)
+          {
+            return d.id;
+          }})
+      .attr("class",'hovertext')
       .attr('x',function(d){return(-get_radius(d))})
       .attr('y', 3);
-  var hover  = node.append("text")
-    .text(function(d) {
-      if (get_radius(d)<=10)
-        {
-          return d.id;
-        }})
-    .attr("class",'hovertext')
-    .attr('x',function(d){return(-get_radius(d))})
-    .attr('y', 3);
 
-  // node.append("title")
-  //     .text(function(d) { return d.id; });
+    // node.append("title")
+    //     .text(function(d) { return d.id; });
 
-  simulation
-      .nodes(graph.nodes)
-      .on("tick", ticked);
+    simulation
+        .nodes(graph.nodes)
+        .on("tick", ticked);
 
-  simulation.force("link")
-      .links(graph.links);
+    simulation.force("link")
+        .links(graph.links);
 
-  function ticked() {
-    link
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+    function ticked() {
+      link
+          .attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
 
-    node
-        .attr("transform", function(d) {
-          return "translate(" + d.x + "," + d.y + ")";
-        })
+      node
+          .attr("transform", function(d) {
+            return "translate(" + d.x + "," + d.y + ")";
+          })
+    }
+  });
+
+  function dragstarted(d) {
+    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
   }
-});
 
-function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-  d.fx = d.x;
-  d.fy = d.y;
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+
+  function dragended(d) {
+    if (!d3.event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
 }
 
-function dragged(d) {
-  d.fx = d3.event.x;
-  d.fy = d3.event.y;
+function removeNetwork() {
+  network = $('#network')
+  children = network.children()
+  for(var i=0; i<children.length; i++) {
+    children[i].remove()
+  }
 }
 
-function dragended(d) {
-  if (!d3.event.active) simulation.alphaTarget(0);
-  d.fx = null;
-  d.fy = null;
+function regenerateNetwork(jsonFilepath) {
+  removeNetwork()
+  generateNetwork(jsonFilepath)
 }
+
+generateNetwork("Example_Data/miserables.json")

@@ -14,3 +14,7 @@ result = $.ajax({
                 console.log("error");
             }
         });
+
+Do the search with:
+- An age cutoff (eg 1980)
+- Minimum citation count (will need to vary with field)
