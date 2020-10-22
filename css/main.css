@@ -99,8 +99,9 @@ textarea {
    svg
    {
      /* background:red; */
-     max-width:960px;
-     width:90%;
+     /* max-width:960px; */
+     /* background:red; */
+     /* width:90%; */
      color:#EEE;
    }
    header {
@@ -118,11 +119,13 @@ textarea {
       /* z-index:-1; */
      background: #EEE;
 
+
     display: grid;
     place-items: center;
-    padding:2rem;
+    /* padding:2rem;
     padding-left:4rem;
-    padding;right:4rem;
+    padding;right:4rem; */
+    padding: 0;
   }
 
   input[type=search] {
