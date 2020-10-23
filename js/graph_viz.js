@@ -1,12 +1,12 @@
-var graph_data =
+var graphData =
 {
-  "add_node" :function (new_node){
+  "addNode" :function (newNode){
 
-    this.nodes.push(new_node)
+    this.nodes.push(newNode)
     test.update(this)
   },
-  "add_link" :function (new_link){
-      this.links.push(new_link)
+  "addLink" :function (newLink){
+      this.links.push(newLink)
       test.update(this)
   },
   "clear" : function(){
@@ -51,8 +51,8 @@ drag = simulation => {
 
 
 
-const links = graph_data.links.map(d => Object.create(d));
-const nodes = graph_data.nodes.map(d => Object.create(d));
+const links = graphData.links.map(d => Object.create(d));
+const nodes = graphData.nodes.map(d => Object.create(d));
 
 const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id(d => d.id))
