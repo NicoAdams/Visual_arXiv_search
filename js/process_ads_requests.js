@@ -26,30 +26,31 @@ function buildGraphData(searchString) {
 
     // Adds nodes for the central group
     dataInit.forEach(paper => {
-      node = makeNode(paper, 0)
-      bibcodeNodes[paper['bibcode']] = node
-      graphData.addNode(node)
+      nodeCurr = makeNode(paper, 0)
+      bibcodeNodes[paper['bibcode']] = nodeCurr
+      graphData.addNode(nodeCurr)
     })
 
     // Adds nodes and edges for references
     dataInit.forEach(paperSource => {
       bibcodeSource = paperSource['bibcode']
       refsRequest(bibcodeSource, success=(responseRefs)=>{
-        dataRefs = responseRefs['responseJSON']['response']['docs']
+        dataRefs = responseRefs['response']['docs']
         dataRefs.forEach((paperRef)=>{
           bibcodeRef = paperRef['bibcode']
-          if(!(bibcodeRef in bibcodeNodes.values)) {
-            node = makeNode(paperRef, 1)
-            bibcodeNodes[paper['bibcode']] = node
-            graphData.addNode(node)
+          console.log(bibcodeNodes)
+          if(!(bibcodeRef in bibcodeNodes)) {
+            nodeRef = makeNode(paperRef, 1)
+            bibcodeNodes[paperRef['bibcode']] = nodeRef
+            graphData.addNode(nodeRef)
           }
-          edge = {
+          edgeRef = {
             'source': bibcodeSource,
-            'ref': bibcodeRef,
+            'target': bibcodeRef,
             'value': 1
           }
-          bibcodeEdges.push(edge)
-          graphData.addEdge(edge)
+          bibcodeEdges.push(edgeRef)
+          graphData.addLink(edgeRef)
         })
       })
     })
