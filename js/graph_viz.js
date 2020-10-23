@@ -335,7 +335,7 @@
 //     {"source": "Mme.Hucheloup", "target": "Enjolras", "value": 1}
 //   ]
 // }
-var data =
+var network_data =
 {
   "add_node" :function (new_node){
 
@@ -349,7 +349,7 @@ var data =
   "clear" : function(){
     this.nodes = []
     this.links = []
-    test.update(this)
+    graph.update(this)
   },
   "nodes" : [{"id":1},{"id":2}],
   "links" : []
@@ -388,8 +388,8 @@ drag = simulation => {
 
 
 
-const links = data.links.map(d => Object.create(d));
-const nodes = data.nodes.map(d => Object.create(d));
+const links = network_data.links.map(d => Object.create(d));
+const nodes = network_data.nodes.map(d => Object.create(d));
 
 const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id(d => d.id))
