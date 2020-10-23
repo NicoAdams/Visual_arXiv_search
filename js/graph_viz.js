@@ -56,8 +56,8 @@ const nodes = graphData.nodes.map(d => Object.create(d));
 
 const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id(d => d.id))
-    .force("charge", d3.forceManyBody().strength(-30*10))
-    .force('collision', d3.forceCollide().radius(25))
+    .force("charge", d3.forceManyBody().strength(-30))
+    .force('collision', d3.forceCollide().radius(5))
     .force("x", d3.forceX())
     .force("y", d3.forceY());
 
@@ -79,7 +79,7 @@ var node = svg.append("g")
   .data(nodes)
   .join("circle")
   .attr("r", function(d){return(d.citationCount)})
-  .attr("fill", function(d) { return color(d.group); })
+  .attr("fill", function(d) { return color(d.layer); })
   .call(drag(simulation));
 
 node.append("title")
@@ -109,8 +109,8 @@ graph = Object.assign(svg.node(), {
       node = node
         .data(nodes, d => d.id)
         .join(enter => enter.append("circle")
-          .attr("r", function(d){return(d.citationCount/100.)})
-          .attr("fill", d => color(d.id)))
+          .attr("r", function(d){return(2*Math.log(d.citationCount))})
+          .attr("fill", d => color(d.layer)))
           .call(drag(simulation));
 
       link = link

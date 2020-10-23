@@ -34,13 +34,13 @@ function buildGraphData(searchString) {
 
     // Adds nodes and edges for references
     dataInit.forEach(paperSource => {
-      bibcodeSource = paperSource['bibcode']
+      var bibcodeSource = paperSource['bibcode']
       refsRequest(bibcodeSource, success=(responseRefs)=>{
         dataRefs = responseRefs['response']['docs']
         // console.log(dataRefs)
         dataRefs = dataRefs.filter(function(element){ return element["citation_count"] > 50; })
         dataRefs.forEach((paperRef)=>{
-          bibcodeRef = paperRef['bibcode']
+           bibcodeRef = paperRef['bibcode']
           // console.log(bibcodeNodes)
           if(!(bibcodeRef in bibcodeNodes)) {
             nodeRef = makeNode(paperRef, 1)
