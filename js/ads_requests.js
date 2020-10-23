@@ -18,7 +18,7 @@ function searchRequestFromString(searchString, rows=20, success=(response)=>{}) 
     },
     crossDomain: true,
     success: function (response) {
-        success(respose)
+        success(response)
     },
     error: function (xhr, status) {
         console.log("Could not complete search request. ", xhr, status);
