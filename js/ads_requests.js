@@ -9,7 +9,7 @@ function assembleSearchURL(searchString, rows) {
   return url
 }
 
-function searchRequestFromString(searchString, rows=20) {
+function searchRequestFromString(searchString, rows=20, layer = 0) {
   result = $.ajax({
     url: assembleSearchURL(searchString, rows),
     type: "GET",
@@ -27,10 +27,10 @@ function searchRequestFromString(searchString, rows=20) {
   return result
 }
 
-function refsRequest(bibcode) {
+function refsRequest(bibcode, layer = 1) {
   searchString = 'references('+bibcode+')'
   rows = 2000
-  return searchRequestFromString(searchString, rows)
+  return searchRequestFromString(searchString, rows, layer)
 }
 
 function searchRequest(fields) {
