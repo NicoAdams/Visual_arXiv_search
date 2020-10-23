@@ -2,27 +2,55 @@
 // a network structure to be processed by the network generation functions
 
 function getPaperDisplayName(paper) {
-  return paper['title'][0]+' '+paper['year']+' ('+paper['bibcode']+')'
+  return paper['author'][0]+'+'+paper['year']+' ('+paper['bibcode']+')'
 }
 
-function buildNetworkData(searchString) {
-  bibcodeNodes = [] // A node needs an "id", a "displayName", a "group" and a "radius"
+function makeNode(paper, layer) {
+  return {
+    'id': paper['bibcode'],
+    'displayName': getPaperDisplayName(paper),
+    'citationCount': paper['citation_count'],
+    'layer': layer,
+    'radius': 15
+  }
+}
+
+function buildGraphData(searchString) {
+  bibcodeNodes = {} // A node needs an "id", a "displayName", a "group" and a "radius"
   bibcodeEdges = [] // An edge needs a "source", a "target" and a "value"
 
   // First step: Initial search
+  searchRequestFromString(searchString, success=(responseInit)=>{
+    dataInit = responseInit['responseJSON']['response']['docs']
 
-  responseInit = searchRequestFromString(searchString)
-  dataInit = response['responseJSON']['response']['docs']
+    // Adds nodes for the central group
+    dataInit.forEach(paper => {
+      node = makeNode(paper)
+      bibcodeNodes[paper['bibcode']] = node
+      graphData.add_node(node)
+    })
 
-  dataInit.forEach(paper => {
-    node = {
-      'id': paper['bibcode'],
-      'name': getPaperDisplayName(paper),
-      'group': 1,
-      'radius': 15
-    }
+    // Adds nodes and edges for references
+    dataInit.forEach(paperSource => {
+      bibcodeSource = paperSource['bibcode']
+      refsRequest(bibcodeSource, success=(responseRefs)=>{
+        dataRefs = responseRefs['responseJSON']['response']['docs']
+        dataRefs.forEach((paperRef)=>{
+          bibcodeRef = paperRef['bibcode']
+          if(!(bibcodeRef in bibcodeNodes.values)) {
+            node = makeNode(paperRef)
+            bibcodeNodes[paper['bibcode']] = node
+            graphData.add_node(node)
+          }
+          edge = {
+            'source': bibcodeSource,
+            'ref': bibcodeRef,
+            'value': 1
+          }
+          bibcodeEdges.push(edge)
+          graphData.add_edge(edge)
+        })
+      })
+    })
   })
-
-
-
 }

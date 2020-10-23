@@ -5,12 +5,12 @@ const token = "dnp7EQ5y47A222l6fOc0XCbE3YCPrb6egKygc56I"
 function assembleSearchURL(searchString, rows) {
   url = "https://api.adsabs.harvard.edu/v1/search/query?q="
   url += encodeURI(searchString)
-  url += "&fl=title,bibcode,citation_count,year&rows="+rows
+  url += "&fl=title,author,bibcode,citation_count,year&rows="+rows
   return url
 }
 
-function searchRequestFromString(searchString, rows=20) {
-  result = $.ajax({
+function searchRequestFromString(searchString, rows=20, success=(response)=>{}) {
+  $.ajax({
     url: assembleSearchURL(searchString, rows),
     type: "GET",
     headers: {
@@ -18,33 +18,18 @@ function searchRequestFromString(searchString, rows=20) {
     },
     crossDomain: true,
     success: function (response) {
-        var resp = response
+        success(respose)
     },
     error: function (xhr, status) {
         console.log("Could not complete search request. ", xhr, status);
     }
   })
-  return result
 }
 
-function refsRequest(bibcode) {
+function refsRequest(bibcode, success=()=>{}) {
   searchString = 'references('+bibcode+')'
-  rows = 2000
-  return searchRequestFromString(searchString, rows)
+  searchRequestFromString(searchString, rows=2000, success=success)
 }
-
-function searchRequest(fields) {
-  searchString = ""
-  for(var key in fields) {
-    if(key == 'searchstr') {
-      searchString += fields[key] + " "
-    } else {
-      searchString += key + ":" + obj[key] + " "
-    }
-    return searchRequestFromString(searchString)
-  }
-}
-
 
 
 // var res = searchRequestFromString('"clumpy galaxies" candels year:2015')
