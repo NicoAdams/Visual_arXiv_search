@@ -3,11 +3,11 @@ var graphData =
   "addNode" :function (newNode){
 
     this.nodes.push(newNode)
-    test.update(this)
+    graph.update(this)
   },
   "addLink" :function (newLink){
       this.links.push(newLink)
-      test.update(this)
+      graph.update(this)
   },
   "clear" : function(){
     this.nodes = []
@@ -122,3 +122,14 @@ graph = Object.assign(svg.node(), {
       simulation.alpha(1).restart();
     }
   });
+for (var i = 0; i < 10; i++) {
+  graphData.addNode({"id":i})
+  graphData.addNode({"id":i+10})
+
+};
+
+for (var i = 0; i < 10; i++) {
+  graphData.addLink({"source":i,"target":i+10})
+  graphData.addLink({"source":i,"target":i+Math.floor(Math.random() * Math.floor(10))})
+
+};
