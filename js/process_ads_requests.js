@@ -21,8 +21,9 @@ function buildGraphData(searchString) {
 
   // First step: Initial search
   searchRequestFromString(searchString, rows=20, success=(responseInit)=>{
-    console.log(responseInit)
+    // console.log(responseInit)
     dataInit = responseInit['response']['docs']
+
 
     // Adds nodes for the central group
     dataInit.forEach(paper => {
@@ -36,9 +37,11 @@ function buildGraphData(searchString) {
       bibcodeSource = paperSource['bibcode']
       refsRequest(bibcodeSource, success=(responseRefs)=>{
         dataRefs = responseRefs['response']['docs']
+        // console.log(dataRefs)
+        dataRefs = dataRefs.filter(function(element){ return element["citation_count"] > 50; })
         dataRefs.forEach((paperRef)=>{
           bibcodeRef = paperRef['bibcode']
-          console.log(bibcodeNodes)
+          // console.log(bibcodeNodes)
           if(!(bibcodeRef in bibcodeNodes)) {
             nodeRef = makeNode(paperRef, 1)
             bibcodeNodes[paperRef['bibcode']] = nodeRef

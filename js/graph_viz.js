@@ -78,7 +78,7 @@ var node = svg.append("g")
   .selectAll("circle")
   .data(nodes)
   .join("circle")
-  .attr("r", 20)
+  .attr("r", function(d){return(d.citationCount)})
   .attr("fill", function(d) { return color(d.group); })
   .call(drag(simulation));
 
@@ -109,7 +109,7 @@ graph = Object.assign(svg.node(), {
       node = node
         .data(nodes, d => d.id)
         .join(enter => enter.append("circle")
-          .attr("r", 20)
+          .attr("r", function(d){return(d.citationCount/100.)})
           .attr("fill", d => color(d.id)))
           .call(drag(simulation));
 
@@ -122,14 +122,3 @@ graph = Object.assign(svg.node(), {
       simulation.alpha(1).restart();
     }
   });
-for (var i = 0; i < 10; i++) {
-  graphData.addNode({"id":i})
-  graphData.addNode({"id":i+10})
-
-};
-
-for (var i = 0; i < 10; i++) {
-  graphData.addLink({"source":i,"target":i+10})
-  graphData.addLink({"source":i,"target":i+Math.floor(Math.random() * Math.floor(10))})
-
-};
