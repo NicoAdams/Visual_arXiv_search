@@ -28,7 +28,7 @@ function searchRequestFromString(searchString, rows=20, success=(response)=>{}) 
 
 function refsRequest(bibcode, success=()=>{}) {
   searchString = 'references('+bibcode+')'
-  searchRequestFromString(searchString, rows=25, success=success)
+  searchRequestFromString(searchString, rows=1, success=success)
 }
 
 

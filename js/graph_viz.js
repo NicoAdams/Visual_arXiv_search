@@ -1,7 +1,6 @@
 var graphData =
 {
   "addNode" :function (newNode){
-
     this.nodes.push(newNode)
     graph.update(this)
   },
@@ -14,15 +13,18 @@ var graphData =
     this.links = []
     graph.update(this)
   },
-  "nodes" : [{"id":1},{"id":2}],
+  "nodes" : [],
   "links" : []
  }
+
 var rect = $("#main")[0].getBoundingClientRect();
 
 var height = rect.height
     width = rect.width;
 
 color = d3.scaleOrdinal(d3.schemeCategory10)
+radius = d => 4*Math.log(1.1+d.citationCount/100)
+radius = d => d.citationCount/300+5
 
 drag = simulation => {
 
@@ -49,52 +51,45 @@ drag = simulation => {
       .on("end", dragended);
 }
 
+const linksData = graphData.links.map(d => Object.create(d));
+const nodesData = graphData.nodes.map(d => Object.create(d));
 
-
-const links = graphData.links.map(d => Object.create(d));
-const nodes = graphData.nodes.map(d => Object.create(d));
-
-const simulation = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id(d => d.id))
-    .force("charge", d3.forceManyBody().strength(-30))
-    .force('collision', d3.forceCollide().radius(5))
+const simulation = d3.forceSimulation(nodesData)
+    .force("link", d3.forceLink(linksData).id(d => d.id))
+    .force("charge", d3.forceManyBody().strength(d => -10+-15*radius(d)))
+    .force('collision', d3.forceCollide().radius(d=> radius(d)))
     .force("x", d3.forceX())
     .force("y", d3.forceY());
 
 const svg = d3.select("#network")
     .attr("viewBox", [-width / 2, -height / 2, width, height]);
 
-var link = svg.append("g")
-  .attr("stroke", "#999")
+var linkGroup = svg.append("g")
+  .attr("class","linksGroup")
+  .attr("stroke", "#666")
   .attr("stroke-opacity", 0.6)
   .selectAll("line")
-  .data(links)
-  .join("line")
-  .attr("stroke-width", d => Math.sqrt(d.value));
+  .data(linksData);
 
-var node = svg.append("g")
-  .attr("stroke", "#fff")
-  .attr("stroke-width", 1.5)
+var nodeGroup = svg.append("g")
+  .attr("class","nodesGroup")
   .selectAll("circle")
-  .data(nodes)
-  .join("circle")
-  .attr("r", function(d){return(d.citationCount)})
-  .attr("fill", function(d) { return color(d.layer); })
-  .call(drag(simulation));
-
-node.append("title")
-    .text(d => d.id);
+  .data(nodesData);
 
 simulation.on("tick", () => {
-  link
+  linkGroup
       .attr("x1", d => d.source.x)
       .attr("y1", d => d.source.y)
       .attr("x2", d => d.target.x)
       .attr("y2", d => d.target.y);
 
-  node
+  nodeGroup.select("circle")
       .attr("cx", d => d.x)
       .attr("cy", d => d.y);
+
+  nodeGroup.select("text")
+      .attr("x", d => -radius(d)+d.x)
+      .attr("y", d => d.y);
 });
 
 graph = Object.assign(svg.node(), {
@@ -102,20 +97,34 @@ graph = Object.assign(svg.node(), {
 
       // Make a shallow copy to protect against mutation, while
       // recycling old nodes to preserve position and velocity.
-      const old = new Map(node.data().map(d => [d.id, d]));
+      const old = new Map(nodeGroup.data().map(d => [d.id, d]));
       nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
       links = links.map(d => Object.assign({}, d));
 
-      node = node
+      nodeGroup = nodeGroup
         .data(nodes, d => d.id)
-        .join(enter => enter.append("circle")
-          .attr("r", function(d){return(2*Math.log(d.citationCount))})
-          .attr("fill", d => color(d.layer)))
-          .call(drag(simulation));
+        .join(function(enter){
+          var nodeG =  enter.append("g").attr("class","node")
+          nodeG.append("circle")
+          .attr("r", radius)
+          .attr("fill", d=> color(d.layer))
 
-      link = link
+          nodeG.append("text")
+          .text(d=> d.displayName)
+          .attr("x",0)
+          .attr("y",0)
+          .attr("fill","#222");
+          // .attr("stroke","#222")
+
+          return(nodeG)
+        })
+        .call(drag(simulation));
+
+
+      linkGroup = linkGroup
         .data(links, d => [d.source, d.target])
         .join("line");
+
 
       simulation.nodes(nodes);
       simulation.force("link").links(links);

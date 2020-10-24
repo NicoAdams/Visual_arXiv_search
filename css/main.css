@@ -66,18 +66,44 @@ textarea {
    }
 
    text {
+     background: #222;
      font-family: sans-serif;
-     font-size: 10px;
+     font-size: 1em;
+     display: none;
+     z-index:1000000;
    }
 
-   g:hover > .hovertext {
+   .node:hover>text
+   {
+     display: block;
+   }
+
+
+
+
+   /* g:hover > .hovertext {
      display: block;
    }
 
    .hovertext{
      display: none;
-   }
+   } */
+   /* g:hover {
+     background-color: red;
+   } */
 
+   .circle:hover:after {
+       content: attr(data-name);
+       padding: 4px 8px;
+       color: black;
+       background-color:white;
+       position: absolute;
+       left: 0;
+       top: 100%;
+       z-index:10;
+       border:1px black solid;
+       box-shadow:0 0 3px #ccc;
+   }
    body {
      display: grid;
      height: 100vh;

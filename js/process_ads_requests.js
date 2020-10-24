@@ -1,13 +1,16 @@
 // This file makes requests using the ADS API, then processes the results into
 // a network structure to be processed by the network generation functions
 
-function getPaperDisplayName(paper) {
-  return paper['author'][0]+'+'+paper['year']+' ('+paper['bibcode']+')'
-}
+getPaperDisplayName = paper => paper['author'][0]+' '+paper['year']
+getFullName = paper => paper["title"][0]+ ' \n '+paper['author'].join(', ');
 
 function makeNode(paper, layer) {
   return {
     'id': paper['bibcode'],
+    'title':paper["title"][0],
+    'authors':paper['author'].join(', '),
+    'firstAuthor':paper["author"][0],
+    'year': paper['year'],
     'displayName': getPaperDisplayName(paper),
     'citationCount': paper['citation_count'],
     'layer': layer,
@@ -20,7 +23,7 @@ function buildGraphData(searchString) {
   bibcodeEdges = [] // An edge needs a "source" and a "target"
 
   // First step: Initial search
-  searchRequestFromString(searchString, rows=20, success=(responseInit)=>{
+  searchRequestFromString(searchString, rows=50, success=(responseInit)=>{
     // console.log(responseInit)
     dataInit = responseInit['response']['docs']
 
@@ -38,7 +41,7 @@ function buildGraphData(searchString) {
       refsRequest(bibcodeSource, success=(responseRefs)=>{
         dataRefs = responseRefs['response']['docs']
         // console.log(dataRefs)
-        dataRefs = dataRefs.filter(function(element){ return element["citation_count"] > 50; })
+        // dataRefs = dataRefs.filter(function(element){ return element["citation_count"] > 50; })
         dataRefs.forEach((paperRef)=>{
            bibcodeRef = paperRef['bibcode']
           // console.log(bibcodeNodes)
