@@ -9,7 +9,7 @@ function assembleSearchURL(searchString, rows) {
   return url
 }
 
-function searchRequestFromString(searchString, rows=20, success=(response)=>{}) {
+function searchRequestFromString(searchString, rows=50, success=(response)=>{}) {
   $.ajax({
     url: assembleSearchURL(searchString, rows),
     type: "GET",
