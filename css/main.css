@@ -146,17 +146,22 @@ textarea {
       display: grid;
     grid-template: auto / 6fr 6fr;
     grid-gap: 10px;
-    background-color: #222;
+    /* background-color: #222; */
     padding: 10px;
   }
   main > div
   {
-    background: #EEE;
+    /* background: #EEE; */
     display: grid;
   place-items: center;
   padding:10px;
   }
-
+  h1
+  {
+    font-weight: 800;
+    font-size: 4em;
+    color:#957DAD;
+  }
   li
   {
     padding:10px;
