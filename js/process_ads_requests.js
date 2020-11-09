@@ -23,7 +23,7 @@ function buildGraphData(searchString) {
   bibcodeEdges = [] // An edge needs a "source" and a "target"
 
   // First step: Initial search
-  searchRequestFromString(searchString, rows=50, success=(responseInit)=>{
+  searchRequestFromString(searchString, rows=5, success=(responseInit)=>{
     // console.log(responseInit)
     dataInit = responseInit['response']['docs']
 
@@ -32,7 +32,7 @@ function buildGraphData(searchString) {
     dataInit.forEach(paper => {
       nodeCurr = makeNode(paper, 0)
       bibcodeNodes[paper['bibcode']] = nodeCurr
-      graphData.addNode(nodeCurr)
+      listData.addNode(nodeCurr)
     })
 
     // Adds nodes and edges for references
@@ -48,7 +48,7 @@ function buildGraphData(searchString) {
           if(!(bibcodeRef in bibcodeNodes)) {
             nodeRef = makeNode(paperRef, 1)
             bibcodeNodes[paperRef['bibcode']] = nodeRef
-            graphData.addNode(nodeRef)
+            listData.addNode(nodeRef)
           }
           edgeRef = {
             'source': bibcodeSource,
@@ -56,7 +56,7 @@ function buildGraphData(searchString) {
             'value': 1
           }
           bibcodeEdges.push(edgeRef)
-          graphData.addLink(edgeRef)
+          listData.addLink(edgeRef)
         })
       })
     })

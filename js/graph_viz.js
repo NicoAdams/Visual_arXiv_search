@@ -35,7 +35,7 @@ function radius(d) {
 drag = simulation => {
 
   function dragstarted(event, d) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
+    if (!event.active) simulation.alphaTarget(.1).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
@@ -61,9 +61,9 @@ const linksData = graphData.links.map(d => Object.create(d));
 const nodesData = graphData.nodes.map(d => Object.create(d));
 
 const simulation = d3.forceSimulation(nodesData)
-    .force("link", d3.forceLink(linksData).id(d => d.id))
+    .force("link", d3.forceLink(linksData).id(d => d.id).strength(1))
     // .force("charge", d3.forceManyBody().strength(d => -10+-15*radius(d)))
-    .force("charge", d3.forceManyBody().strength(d => -10*(1+1.5*radius(d.id))))
+    .force("charge", d3.forceManyBody().strength(d => -2*(1+1.5*radius(d.id))))
     .force('collision', d3.forceCollide().radius(d=> radius(d.id)+5))
     .force("x", d3.forceX())
     .force("y", d3.forceY());

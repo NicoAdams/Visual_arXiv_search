@@ -143,15 +143,18 @@ textarea {
 
    main {
       /* z-index:-1; */
-     background: #EEE;
-
-
+      display: grid;
+    grid-template: auto / 6fr 6fr;
+    grid-gap: 10px;
+    background-color: #222;
+    padding: 10px;
+  }
+  main > div
+  {
+    background: #EEE;
     display: grid;
-    place-items: center;
-    /* padding:2rem;
-    padding-left:4rem;
-    padding;right:4rem; */
-    padding: 0;
+  place-items: center;
+  padding:10px;
   }
 
   input[type=search] {
