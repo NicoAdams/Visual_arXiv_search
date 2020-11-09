@@ -160,6 +160,7 @@ textarea {
   li
   {
     padding:10px;
+    list-style-type: none;
   }
 
   input[type=search] {

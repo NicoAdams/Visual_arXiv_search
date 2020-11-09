@@ -26,13 +26,15 @@ function update(data){
   for (var i = 0; i < data.nodes.length; i++) {
     node = data.nodes[i]
     if (node.layer==0) {
-      $("#results").append('<li>'+node.title+' '+rank(node)+'</li>');
+      url = "https://ui.adsabs.harvard.edu/abs/"+node.id+"/abstract"
+      $("#results").append('<li><a href = '+url+'>'+node.title+' '+rank(node)+'</a></li>');
     }
   }
   for (var i = 0; i < Math.min(25,data.nodes.length); i++) {
     node = data.nodes[i]
     if (node.layer==1) {
-      $("#background").append('<li>'+node.title+' '+rank(node)+'</li>');
+      url = "https://ui.adsabs.harvard.edu/abs/"+node.id+"/abstract"
+      $("#background").append('<li><a href = '+url+'>'+node.title+' '+rank(node)+'</a></li>');
     }
   }
 

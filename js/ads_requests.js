@@ -18,6 +18,7 @@ function searchRequestFromString(searchString, rows=20, success=(response)=>{}) 
     },
     crossDomain: true,
     success: function (response) {
+        console.log(response)
         success(response)
     },
     error: function (xhr, status) {
@@ -28,7 +29,7 @@ function searchRequestFromString(searchString, rows=20, success=(response)=>{}) 
 
 function refsRequest(bibcode, success=()=>{}) {
   searchString = 'references('+bibcode+')'
-  searchRequestFromString(searchString, rows=1000, success=success)
+  searchRequestFromString(searchString, rows=100, success=success)
 }
 
 
