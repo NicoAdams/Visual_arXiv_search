@@ -23,7 +23,7 @@ function buildGraphData(searchString) {
   bibcodeEdges = [] // An edge needs a "source" and a "target"
 
   // First step: Initial search
-  searchRequestFromString(searchString, rows=5, success=(responseInit)=>{
+  searchRequestFromString(searchString, rows=25, success=(responseInit)=>{
     // console.log(responseInit)
     dataInit = responseInit['response']['docs']
 

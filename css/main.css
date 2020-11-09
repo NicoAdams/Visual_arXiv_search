@@ -157,6 +157,11 @@ textarea {
   padding:10px;
   }
 
+  li
+  {
+    padding:10px;
+  }
+
   input[type=search] {
     color:#222;
     font-size: 1.3rem;
