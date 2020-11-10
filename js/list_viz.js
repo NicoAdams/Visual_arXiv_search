@@ -22,19 +22,20 @@ function update(data){
   $("#results").empty();
   $("#background").empty();
 
-  data.nodes.sort(function(a, b){return rank(b)-rank(a)});
+  data.nodes.sort(function(a, b){return b.citationCount-a.citationCount});
   for (var i = 0; i < data.nodes.length; i++) {
     node = data.nodes[i]
     if (node.layer==0) {
       url = "https://ui.adsabs.harvard.edu/abs/"+node.id+"/abstract"
-      $("#results").append('<li><a href = '+url+'>'+node.title+' '+rank(node)+'</a></li>');
+      $("#results").append('<li><a href = '+url+'>'+node.title+' '+rank(node)+" "+node.citationCount+'</a></li>');
     }
   }
+  data.nodes.sort(function(a, b){return rank(b)-rank(a)});
   for (var i = 0; i < Math.min(25,data.nodes.length); i++) {
     node = data.nodes[i]
     if (node.layer==1) {
       url = "https://ui.adsabs.harvard.edu/abs/"+node.id+"/abstract"
-      $("#background").append('<li><a href = '+url+'>'+node.title+' '+rank(node)+'</a></li>');
+      $("#background").append('<li><a href = '+url+'>'+node.title+' '+rank(node)+" "+node.citationCount+'</a></li>');
     }
   }
 

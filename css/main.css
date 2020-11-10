@@ -112,7 +112,8 @@ textarea {
 
    h1
    {
-     font-weight: 400;
+     font-weight: 800;
+     font-size:4em;
    }
    .bold
    {
@@ -156,7 +157,7 @@ textarea {
   place-items: center;
   padding:10px;
   }
-  h1
+  h2
   {
     font-weight: 800;
     font-size: 4em;
