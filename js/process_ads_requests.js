@@ -1,7 +1,20 @@
 // This file makes requests using the ADS API, then processes the results into
 // a network structure to be processed by the network generation functions
 
-getPaperDisplayName = paper => paper['author'][0]+' '+paper['year']
+getPaperAuthorString = paper => {
+  var authorList = paper['author']
+  if (authorList.length == 1) {return authorList[0]}
+  if (authorList.length > 3) {return authorList[0]+' et al.'}
+  authorStr = ''
+  for(var i=0; i<authorList.length; i++) {
+    if(i==(authorList.length-1)) {authorStr += '; & '}
+    else if (i > 0) {authorStr += '; '}
+    authorStr += authorList[i]
+  }
+  return authorStr
+
+}
+getPaperDisplayName = paper => getPaperAuthorString(paper)+' '+paper['year']
 getFullName = paper => paper["title"][0]+ ' \n '+paper['author'].join(', ');
 
 function makeNode(paper, layer) {
